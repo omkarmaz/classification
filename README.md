@@ -1,2 +1,2 @@
-# classification
-Classification problems
+# classification/clustering
+Classification/Clustering problems
