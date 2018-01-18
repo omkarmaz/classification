@@ -55,7 +55,7 @@ stemmer = nl.stem.snowball.SnowballStemmer("english")
 new_tokens = []
 for index,item in train_df.iterrows():
     token_words = [word for word in item['tokens']]
-    #token_words = [stemmer.stem(word) for word in item['tokens']]  # stemmers can be used but note that "customer" can become "custom"
+    #token_words = [stemmer.stem(word) for word in item['tokens']]  # stemmers can be used but note that "customer" can become "custom". Stop words filter can also be used
     list_temp = []
     for word in token_words:
         str_temp = re.sub("\(+\)+\:+\,+\-+|\+|\.\.\.+|\`+|\'+|\.+|\"+", "", word)    # remove some un-necessary characters
@@ -65,7 +65,7 @@ for index,item in train_df.iterrows():
     new_tokens.append(list_temp)
 train_df['new_tokens']=new_tokens
 
-modelw2v = gensim.models.Word2Vec(iter=10000, sg=0, min_count=1, size = vector_size, window=8, workers=1) #workers=1 will use only 1 CPU core
+modelw2v = gensim.models.Word2Vec(iter=10000, sg=0, min_count=1, size = vector_size, window=5, workers=1) #workers=1 will use only 1 CPU core
 modelw2v.build_vocab(x for x in train_df['new_tokens'])
 modelw2v.train([x for x in train_df['new_tokens']], total_words=modelw2v.corpus_count, epochs=modelw2v.iter)
 w2v = dict(zip(modelw2v.wv.index2word, modelw2v.wv.syn0))
